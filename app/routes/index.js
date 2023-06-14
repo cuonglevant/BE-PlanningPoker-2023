@@ -1,0 +1,5 @@
+const siteRouter = require('./sites.js');
+function route(app) {
+	app.use('/', siteRouter);
+}
+module.exports = route;
