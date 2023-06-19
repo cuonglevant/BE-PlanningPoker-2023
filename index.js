@@ -1,10 +1,14 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const route = require('./app/routes/index.js');
-const { CLIENT_URL, PORT } = require('./configs/env.config.js');
+import cors from 'cors';
+import dotenv from 'dotenv';
+import express from 'express';
+import http from 'http';
+import route from './app/routes/index.js';
+dotenv.config();
 
 const app = express();
+
+import { DBConnect } from './app/services/db.js';
+import { CLIENT_URL, PORT } from './config.js';
 
 app.use(
 	cors({
@@ -18,7 +22,9 @@ app.use(express.json());
 
 route(app);
 
-const server = require('http').Server(app);
+const server = http.Server(app);
 
-server.listen(PORT);
-console.log(`Started on ${PORT}`);
+DBConnect().then(() => {
+	server.listen(PORT);
+	console.log(`Started on ${PORT}`);
+});

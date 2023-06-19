@@ -1,5 +1,7 @@
-const siteRouter = require('./sites.js');
-function route(app) {
+import siteRouter from './sites.js';
+
+const route = (app) => {
 	app.use('/', siteRouter);
-}
-module.exports = route;
+};
+
+export default route;
