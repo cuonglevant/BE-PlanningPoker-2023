@@ -11,11 +11,11 @@ import { DBConnect } from './app/services/db.js';
 import { CLIENT_URL, PORT } from './config.js';
 
 app.use(
-	cors({
-		origin: CLIENT_URL,
-		methods: 'GET,POST,PUT,DELETE',
-		credentials: true,
-	})
+  cors({
+    origin: CLIENT_URL,
+    methods: 'GET,POST,PUT,DELETE',
+    credentials: true,
+  }),
 );
 
 app.use(express.json());
@@ -25,6 +25,6 @@ route(app);
 const server = http.Server(app);
 
 DBConnect().then(() => {
-	server.listen(PORT);
-	console.log(`Started on ${PORT}`);
+  server.listen(PORT);
+  console.log(`Started on ${PORT}`);
 });
