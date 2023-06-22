@@ -4,11 +4,14 @@ const Schema = mongoose.Schema;
 const votingSchema = new Schema(
   {
     user: {
-      type: Schema.Types.ObjectId,
+      type: String,
       ref: 'User',
     },
     vote: String,
-    connected: Boolean,
+    connected: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     _id: false,

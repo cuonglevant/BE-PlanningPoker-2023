@@ -18,5 +18,6 @@ export const ROUTES = {
   },
   ROOM: {
     PATH: '/room',
+    NOMINATE: '/nominate',
   },
 };
