@@ -23,4 +23,18 @@ export const authService = {
       .lean();
     return sendUser;
   },
+
+  async getLoggedInUserOfTypeEmail({ email, password }) {
+    const user = await authService.getUserOfTypeEmail(email);
+    if (!user) {
+      return null;
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (isMatch) {
+      delete user.password;
+      return user;
+    } else {
+      return null;
+    }
+  },
 };

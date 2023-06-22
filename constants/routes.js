@@ -14,6 +14,7 @@ export const ROUTES = {
     LOGOUT: '/logout',
     SIGNUP: '/signup',
     GUEST_LOGIN: '/guest/login',
+    EMAIL_LOGIN: '/email/login',
   },
   ROOM: {
     PATH: '/room',

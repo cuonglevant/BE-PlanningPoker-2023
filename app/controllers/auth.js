@@ -82,4 +82,26 @@ export const authController = {
       });
     }
   },
+
+  async loginWithEmail(req, res) {
+    try {
+      const { email, password } = req.body;
+      const user = await authService.getLoggedInUserOfTypeEmail({
+        email,
+        password,
+      });
+      if (!user) {
+        return res.status(HTTP_STATUS.NOT_FOUND).json({
+          success: false,
+          message: RESPONSE_MESSAGE.EMAIL_LOGIN_ERROR,
+        });
+      }
+      responseUtils.sendSuccess(res, { status: HTTP_STATUS.OK, data: user });
+    } catch {
+      responseUtils.sendError(res, {
+        status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        message: RESPONSE_MESSAGE.INTERNAL_SERVER_ERROR,
+      });
+    }
+  },
 };
