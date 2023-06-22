@@ -12,5 +12,6 @@ export const ROUTES = {
     GOOGLE_CALLBACK_FAILED: '/google/failure',
     GOOGLE_LOGIN_SUCCESS: '/login/success',
     LOGOUT: '/logout',
+    SIGNUP: '/signup',
   },
 };
