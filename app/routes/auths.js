@@ -43,6 +43,8 @@ router.get(ROUTES.AUTH.GOOGLE_LOGIN_SUCCESS, authController.googleLoginSuccess);
 
 router.use(ROUTES.AUTH.LOGOUT, authController.googleLogout);
 
+router.post(ROUTES.AUTH.GUEST_LOGIN, authController.guestLogin);
+
 router.post(
   ROUTES.AUTH.SIGNUP,
   body('email').trim().isEmail(),

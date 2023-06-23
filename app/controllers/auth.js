@@ -3,9 +3,11 @@ import { CLIENT_URL } from '../../config.js';
 import { HTTP_STATUS } from '../../constants/HTTPStatusCode.js';
 import { RESPONSE_MESSAGE } from '../../constants/message.js';
 import { authService } from '../services/auth.js';
+import { UserService } from '../services/userService.js';
 import { responseUtils } from '../utils/response.js';
 
 export const authController = {
+  // POST /auth/signup
   async signUpWithEmailAndPassword(req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -35,21 +37,17 @@ export const authController = {
   },
   // GET /auth/google/failure
   googleAuthFailed: (req, res) => {
-    res.status(HTTP_STATUS.BAD_REQUEST).json({
-      success: false,
-    });
+    responseUtils.sendError(res, { status: HTTP_STATUS.BAD_REQUEST });
   },
   // GET /auth/login/success
   googleLoginSuccess: (req, res) => {
     if (req.user) {
-      return res.status(HTTP_STATUS.OK).json({
-        success: true,
+      return responseUtils.sendSuccess(res, {
+        status: HTTP_STATUS.OK,
         data: req.user,
       });
     }
-    return res.status(HTTP_STATUS.BAD_REQUEST).json({
-      success: false,
-    });
+    return responseUtils.sendError(res, { status: HTTP_STATUS.BAD_REQUEST });
   },
   // REQUEST /auth/logout
   googleLogout: (req, res) => {
@@ -59,8 +57,28 @@ export const authController = {
       });
       res.redirect(CLIENT_URL);
     } catch (err) {
-      res.status(HTTP_STATUS.BAD_REQUEST).json({
-        success: false,
+      responseUtils.sendError(res, {
+        status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+      });
+    }
+  },
+  // POST /auth/guest/login
+  guestLogin: async (req, res) => {
+    const { username } = req.body;
+    if (!username) {
+      responseUtils.sendError(res, { status: HTTP_STATUS.BAD_REQUEST });
+    }
+    try {
+      const user = await UserService.createGuestUser(username);
+
+      return responseUtils.sendSuccess(res, {
+        status: HTTP_STATUS.OK,
+        data: user,
+      });
+    } catch (err) {
+      return responseUtils.sendError(res, {
+        status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        message: RESPONSE_MESSAGE.INTERNAL_SERVER_ERROR,
       });
     }
   },
