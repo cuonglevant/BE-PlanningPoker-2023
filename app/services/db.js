@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { DB_CONNECTION_STRING } from '../../config.js';
+import { DB_CONNECTION_STRING } from '../../config';
 
 async function DBConnect() {
   try {

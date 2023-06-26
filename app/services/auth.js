@@ -1,11 +1,12 @@
 import bcrypt from 'bcrypt';
-import { UserTypes } from '../../constants/db.constants.js';
-import { User } from '../models/index.js';
+import { UserTypes } from '../../constants/db.constants';
+import { User } from '../models/index';
+
 const SALT_ROUNDS = 10;
 
 export const authService = {
   async getUserOfTypeEmail(email) {
-    const existingUser = await User.findOne({ email: email }).lean();
+    const existingUser = await User.findOne({ email }).lean();
     return existingUser;
   },
 
@@ -33,8 +34,7 @@ export const authService = {
     if (isMatch) {
       delete user.password;
       return user;
-    } else {
-      return null;
     }
+    return null;
   },
 };

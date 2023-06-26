@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
-import { UserTypes } from '../../constants/db.constants.js';
-const Schema = mongoose.Schema;
+import { UserTypes } from '../../constants/db.constants';
+
+const { Schema } = mongoose;
 
 const userSchema = new Schema({
   name: String,

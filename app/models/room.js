@@ -3,9 +3,10 @@ import {
   ROOM_NAME_DEFAULT,
   RoomStatuses,
   VotingSystems,
-} from '../../constants/db.constants.js';
-import votingSchema from './voting.js';
-const Schema = mongoose.Schema;
+} from '../../constants/db.constants';
+import votingSchema from './voting';
+
+const { Schema } = mongoose;
 
 const roomSchema = new Schema({
   name: {

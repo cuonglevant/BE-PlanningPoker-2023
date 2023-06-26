@@ -4,6 +4,6 @@ export const responseUtils = {
   },
 
   sendSuccess(res, { status, data }) {
-    res.status(status).json({ success: true, data: data });
+    res.status(status).json({ success: true, data });
   },
 };

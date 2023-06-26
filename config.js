@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+
 dotenv.config();
 
 const CLIENT_URL = process.env.DEV_CLIENT_URL || 'http://localhost:3000';

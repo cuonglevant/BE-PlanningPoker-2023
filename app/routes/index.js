@@ -1,7 +1,7 @@
-import { ROUTES } from '../../constants/routes.js';
-import authRouter from './auths.js';
-import roomRouter from './room.js';
-import siteRouter from './sites.js';
+import { ROUTES } from '../../constants/routes';
+import authRouter from './auths';
+import roomRouter from './room';
+import siteRouter from './sites';
 
 const route = (app) => {
   app.use(ROUTES.ROOT.PATH, siteRouter);

@@ -1,6 +1,6 @@
-import History from './history.js';
-import Issue from './issue.js';
-import Room from './room.js';
-import User from './user.js';
+import History from './history';
+import Issue from './issue';
+import Room from './room';
+import User from './user';
 
 export { History, Issue, Room, User };

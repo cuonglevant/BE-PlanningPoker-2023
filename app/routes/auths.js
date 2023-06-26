@@ -2,10 +2,11 @@ import express from 'express';
 import session from 'express-session';
 import { body } from 'express-validator';
 import passport from 'passport';
-import { CLIENT_URL, SESSION_SECRET } from '../../config.js';
-import { ROUTES } from '../../constants/routes.js';
-import { authController } from '../controllers/auth.js';
-import '../services/passport.js';
+import { CLIENT_URL, SESSION_SECRET } from '../../config';
+import { ROUTES } from '../../constants/routes';
+import { authController } from '../controllers/auth';
+import '../services/passport';
+
 const router = express.Router();
 
 router.use(

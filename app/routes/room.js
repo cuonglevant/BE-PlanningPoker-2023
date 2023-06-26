@@ -1,6 +1,7 @@
 import express from 'express';
-import { ROUTES } from '../../constants/routes.js';
-import { roomController } from '../controllers/room.js';
+import { ROUTES } from '../../constants/routes';
+import { roomController } from '../controllers/room';
+
 const router = express.Router();
 
 router.patch(ROUTES.ROOM.NOMINATE, roomController.nominateVote);

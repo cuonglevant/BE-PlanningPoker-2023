@@ -1,5 +1,5 @@
-import { User } from '../models/index.js';
-import { UserTypes } from '../../constants/db.constants.js';
+import { User } from '../models/index';
+import { UserTypes } from '../../constants/db.constants';
 
 export const UserService = {
   createGuestUser: async (username) => {
@@ -26,7 +26,7 @@ export const UserService = {
 
   findGoogleOAuthUser: async (email) => {
     const user = await User.findOne({
-      email: email,
+      email,
       type: UserTypes.GOOGLE,
     });
 

@@ -1,10 +1,10 @@
 import { validationResult } from 'express-validator';
-import { CLIENT_URL } from '../../config.js';
-import { HTTP_STATUS } from '../../constants/HTTPStatusCode.js';
-import { RESPONSE_MESSAGE } from '../../constants/message.js';
-import { authService } from '../services/auth.js';
-import { UserService } from '../services/userService.js';
-import { responseUtils } from '../utils/response.js';
+import { CLIENT_URL } from '../../config';
+import { HTTP_STATUS } from '../../constants/HTTPStatusCode';
+import { RESPONSE_MESSAGE } from '../../constants/message';
+import { authService } from '../services/auth';
+import { UserService } from '../services/userService';
+import { responseUtils } from '../utils/response';
 
 export const authController = {
   // POST /auth/signup
