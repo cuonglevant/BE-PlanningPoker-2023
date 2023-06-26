@@ -18,6 +18,7 @@ export const ROUTES = {
   },
   ROOM: {
     PATH: '/room',
+    GET_ROOM: '/:id',
     NOMINATE: '/nominate',
   },
 };

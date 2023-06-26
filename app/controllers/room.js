@@ -46,4 +46,20 @@ export const roomController = {
       });
     }
   },
+
+  async getRoomById(req, res) {
+    try {
+      const roomId = req.params.id;
+      const room = await roomService.getRoomById(roomId);
+      responseUtils.sendSuccess(res, {
+        status: HTTP_STATUS.OK,
+        data: room,
+      });
+    } catch {
+      responseUtils.sendError(res, {
+        status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        message: RESPONSE_MESSAGE.INTERNAL_SERVER_ERROR,
+      });
+    }
+  },
 };

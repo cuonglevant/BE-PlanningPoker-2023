@@ -34,4 +34,9 @@ export const roomService = {
     voting[userVotingIndex] = userVoting;
     await room.save();
   },
+
+  async getRoomById(roomId) {
+    const room = await Room.findById(roomId);
+    return room;
+  },
 };
