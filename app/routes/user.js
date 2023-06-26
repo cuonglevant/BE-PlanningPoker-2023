@@ -1,9 +1,9 @@
 import express from 'express';
-import siteController from '../controllers/site';
 import { ROUTES } from '../../constants/routes';
+import { userController } from '../controllers/user';
 
 const router = express.Router();
 
-router.get(ROUTES.ROOT.PATH, siteController.loadServer);
+router.get(ROUTES.USER.GET_BY_ID, userController.getUserById);
 
 export default router;

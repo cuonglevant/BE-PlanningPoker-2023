@@ -16,6 +16,10 @@ export const ROUTES = {
     GUEST_LOGIN: '/guest/login',
     EMAIL_LOGIN: '/email/login',
   },
+  USER: {
+    PATH: '/user',
+    GET_BY_ID: '/:id',
+  },
   ROOM: {
     PATH: '/room',
     GET_ROOM: '/:id',

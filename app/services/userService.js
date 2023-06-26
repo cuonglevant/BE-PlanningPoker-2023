@@ -32,4 +32,14 @@ export const UserService = {
 
     return user;
   },
+
+  findUserById: async (id) => {
+    const user = await User.findOne({
+      _id: id,
+    })
+      .select({ password: 0 })
+      .lean();
+
+    return user;
+  },
 };

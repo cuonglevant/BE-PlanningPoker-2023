@@ -7,7 +7,6 @@ import { UserService } from '../services/userService';
 import { responseUtils } from '../utils/response';
 
 export const authController = {
-  // POST /auth/signup
   async signUpWithEmailAndPassword(req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -35,11 +34,11 @@ export const authController = {
       });
     }
   },
-  // GET /auth/google/failure
+
   googleAuthFailed: (req, res) => {
     responseUtils.sendError(res, { status: HTTP_STATUS.BAD_REQUEST });
   },
-  // GET /auth/login/success
+
   googleLoginSuccess: (req, res) => {
     if (req.user) {
       return responseUtils.sendSuccess(res, {
@@ -49,7 +48,7 @@ export const authController = {
     }
     return responseUtils.sendError(res, { status: HTTP_STATUS.BAD_REQUEST });
   },
-  // REQUEST /auth/logout
+
   googleLogout: (req, res) => {
     try {
       req.logout((err) => {
@@ -62,7 +61,7 @@ export const authController = {
       });
     }
   },
-  // POST /auth/guest/login
+
   guestLogin: async (req, res) => {
     const { username } = req.body;
     if (!username) {
@@ -83,7 +82,7 @@ export const authController = {
     }
   },
 
-  async loginWithEmail(req, res) {
+  loginWithEmail: async (req, res) => {
     try {
       const { email, password } = req.body;
       const user = await authService.getLoggedInUserOfTypeEmail({

@@ -54,4 +54,5 @@ router.post(
 );
 
 router.post(ROUTES.AUTH.EMAIL_LOGIN, authController.loginWithEmail);
+
 export default router;
