@@ -3,9 +3,6 @@ import GoogleOAuth2 from 'passport-google-oauth2';
 import { CLIENT_ID, CLIENT_SECRET } from '../../config';
 import { UserService } from './userService';
 import { ROUTES } from '../../constants/routes';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 const GoogleStrategy = GoogleOAuth2.Strategy;
 

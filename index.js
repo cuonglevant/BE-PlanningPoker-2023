@@ -1,7 +1,7 @@
 import cors from 'cors';
 import express from 'express';
 import http from 'http';
-import route from './app/routes/index.js';
+import route from './app/routes/index';
 import { DBConnect } from './app/services/db';
 import { CLIENT_URL, PORT } from './config';
 
