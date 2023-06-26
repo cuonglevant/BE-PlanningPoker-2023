@@ -62,4 +62,38 @@ export const roomController = {
       });
     }
   },
+
+  async saveHistory(req, res) {
+    try {
+      const {
+        issueName,
+        room,
+        results,
+        agreements,
+        durations,
+        date,
+        voteOnTotal,
+        playerResults,
+      } = req.body;
+      await roomService.saveHistory({
+        issueName,
+        room,
+        results,
+        agreements,
+        durations,
+        date,
+        voteOnTotal,
+        playerResults,
+      });
+      responseUtils.sendSuccess(res, {
+        status: HTTP_STATUS.OK,
+        data: RESPONSE_MESSAGE.SAVE_HISTORY_SUCCESS,
+      });
+    } catch {
+      responseUtils.sendError(res, {
+        status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        message: RESPONSE_MESSAGE.INTERNAL_SERVER_ERROR,
+      });
+    }
+  },
 };

@@ -27,5 +27,6 @@ export const ROUTES = {
     PATH: '/room',
     GET_ROOM: '/:id',
     NOMINATE: '/nominate',
+    HISTORY: '/history',
   },
 };

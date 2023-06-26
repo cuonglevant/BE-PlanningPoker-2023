@@ -5,4 +5,5 @@ export const RESPONSE_MESSAGE = {
   SAVE_USERVOTING_SUCCESS: 'Save user voting successfully',
   USER_NOT_IN_ROOM: 'User is not in room',
   USER_NOT_FOUND: 'User not found',
+  SAVE_HISTORY_SUCCESS: 'Save history successfully',
 };
