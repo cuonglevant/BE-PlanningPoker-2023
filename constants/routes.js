@@ -4,6 +4,9 @@ export const ROUTES = {
   ROOT: {
     PATH: '/',
   },
+  DOCS: {
+    PATH: '/docs',
+  },
   AUTH: {
     PATH: '/auth',
     GOOGLE_OAUTH: '/google',

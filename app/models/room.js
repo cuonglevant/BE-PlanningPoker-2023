@@ -8,6 +8,44 @@ import votingSchema from './voting';
 
 const { Schema } = mongoose;
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Room:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: The auto-generated id of room
+ *           example: 649909f49a96cb5a197ce741
+ *         name:
+ *           type: string
+ *           description: The name of room
+ *           example: Planning poker game
+ *         fullConsensus:
+ *           type: number
+ *           default: 0
+ *           description: Number of full consensus vote in room
+ *           example: 3
+ *         votingSystem:
+ *           type: array
+ *           default: ['0','1','2','3','5','8','13','21','34','55','89','?','coffee']
+ *           description: The order of issue in room
+ *         status:
+ *           type: string
+ *           enum:
+ *             - ready
+ *             - voting
+ *             - concluded
+ *           default: ready
+ *           description: The current status of room
+ *         voting:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/Voting'
+ *           description: The current result of user voting in room
+ */
 const roomSchema = new Schema({
   name: {
     type: String,
