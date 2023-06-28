@@ -38,7 +38,7 @@ const router = express.Router();
  *                     type: boolean
  *                     example: true
  *                   data:
- *                     $ref: '#/components/schemas/User'
+ *                     $ref: '#/components/schemas/Room'
  */
 router.post(ROUTES.ROOT.PATH, roomController.createRoom);
 
@@ -77,7 +77,7 @@ router.get(ROUTES.ROOM.GET_ROOM, roomController.getRoomById);
  * paths:
  *   '/room/nominate':
  *     post:
- *       summary: 'Login as guest'
+ *       summary: 'API for user when nominate for voting'
  *       tags: [room]
  *       requestBody:
  *         required: true
@@ -92,7 +92,7 @@ router.get(ROUTES.ROOM.GET_ROOM, roomController.getRoomById);
  *                   type: string
  *       responses:
  *         200:
- *           description: 'return user info in data'
+ *           description: 'return message if the vote data is saved'
  *           content:
  *             'application/json':
  *               schema:
@@ -101,8 +101,9 @@ router.get(ROUTES.ROOM.GET_ROOM, roomController.getRoomById);
  *                   success:
  *                     type: boolean
  *                     example: true
- *                   data:
- *                     $ref: '#/components/schemas/User'
+ *                   message:
+ *                     type: string
+ *                     example: 'Save user voting successfully'
  */
 router.patch(ROUTES.ROOM.NOMINATE, roomController.nominateVote);
 
