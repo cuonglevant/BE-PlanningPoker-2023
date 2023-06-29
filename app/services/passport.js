@@ -11,14 +11,14 @@ passport.use(
     {
       clientID: CLIENT_ID,
       clientSecret: CLIENT_SECRET,
-      callbackURL: `${ROUTES.AUTH.GOOGLE_CALLBACK_FULLPATH}`,
+      callbackURL: ROUTES.AUTH.GOOGLE_CALLBACK_FULLPATH,
       passReqToCallback: true,
     },
     async (request, accessToken, refreshToken, profile, done) => {
       const data = profile._json;
       let user = await UserService.findGoogleOAuthUser(data.email);
       if (!user) user = await UserService.createGoogleOAuthUser(data);
-      done(null, user);
+      done(null, user._id);
     }
   )
 );

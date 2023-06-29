@@ -1,9 +1,11 @@
 import cors from 'cors';
 import express from 'express';
 import http from 'http';
+import session from 'cookie-session';
+import cookieParser from 'cookie-parser';
 import route from './app/routes/index';
 import { DBConnect } from './app/services/db';
-import { CLIENT_URL, PORT } from './config';
+import { CLIENT_URL, PORT, SESSION_NAME, SESSION_SECRET } from './config';
 
 const app = express();
 
@@ -15,7 +17,16 @@ app.use(
   })
 );
 
+app.use(
+  session({
+    name: SESSION_NAME,
+    keys: [SESSION_SECRET],
+    maxAge: 24 * 60 * 60 * 100,
+  })
+);
+
 app.use(express.json());
+app.use(cookieParser());
 
 route(app);
 

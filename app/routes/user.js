@@ -38,6 +38,6 @@ const router = express.Router();
  *                   data:
  *                     $ref: '#/components/schemas/User'
  */
-router.get(ROUTES.USER.PATH, userController.getUserById);
+router.get(ROUTES.USER.GET_BY_ID, userController.getUserById);
 
 export default router;
