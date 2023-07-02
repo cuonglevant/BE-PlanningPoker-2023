@@ -4,6 +4,9 @@ dotenv.config();
 
 export const CLIENT_URL = process.env.DEV_CLIENT_URL || 'http://localhost:3000';
 
+export const HOSTED_CLIENT_URL =
+  process.env.HOSTED_CLIENT_URL || 'https://soft-marzipan-5330c9.netlify.app';
+
 export const SERVER_URL = process.env.DEV_SERVER_URL || 'http://localhost:8080';
 
 export const DB_CONNECTION_STRING =

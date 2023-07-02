@@ -5,13 +5,20 @@ import session from 'cookie-session';
 import cookieParser from 'cookie-parser';
 import route from './app/routes/index';
 import { DBConnect } from './app/services/db';
-import { CLIENT_URL, PORT, SESSION_NAME, SESSION_SECRET } from './config';
+import {
+  CLIENT_URL,
+  PORT,
+  SESSION_NAME,
+  SESSION_SECRET,
+  HOSTED_CLIENT_URL,
+} from './config';
+import { attachIO } from './app/socket/socket';
 
 const app = express();
 
 app.use(
   cors({
-    origin: CLIENT_URL,
+    origin: [CLIENT_URL, HOSTED_CLIENT_URL],
     methods: 'GET,POST,PUT,DELETE',
     credentials: true,
   })
@@ -31,6 +38,7 @@ app.use(cookieParser());
 route(app);
 
 const server = http.Server(app);
+attachIO(server);
 
 DBConnect().then(() => {
   server.listen(PORT);
