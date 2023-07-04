@@ -1,6 +1,7 @@
 import { Server } from 'socket.io';
 import { CLIENT_URL, HOSTED_CLIENT_URL } from '../../config';
 import { SOCKET_EVENT } from '../../constants/socket_event';
+import { roomService } from '../services/room';
 
 export const attachIO = (server) => {
   const io = new Server(server, {
@@ -12,11 +13,12 @@ export const attachIO = (server) => {
 
   io.on(SOCKET_EVENT.CONNECTION, (socket) => {
     socket.on(SOCKET_EVENT.USER.JOIN, (data) => {
-      const { userId, roomId } = data;
+      const { userId, username, roomId } = data;
+      roomService.addUserToRoom(userId, username, roomId);
       socket.userId = userId;
       socket.roomId = roomId;
       socket.join(roomId);
-      io.to(roomId).emit(SOCKET_EVENT.USER.JOIN, { userId });
+      io.to(roomId).emit(SOCKET_EVENT.USER.JOIN, { userId, username });
     });
 
     socket.on(SOCKET_EVENT.USER.VOTE, (data) => {
@@ -24,12 +26,6 @@ export const attachIO = (server) => {
       io.to(socket.roomId).emit(SOCKET_EVENT.USER.VOTE, {
         userId: socket.userId,
         voteValue,
-      });
-    });
-
-    socket.on(SOCKET_EVENT.USER.UNVOTE, () => {
-      io.to(socket.roomId).emit(SOCKET_EVENT.USER.UNVOTE, {
-        userId: socket.userId,
       });
     });
 
@@ -66,6 +62,8 @@ export const attachIO = (server) => {
     });
 
     socket.on(SOCKET_EVENT.DISCONNECTION, () => {
+      if (socket.roomId && socket.userId)
+        roomService.removeUserFromRoom(socket.userId, socket.roomId);
       io.to(socket.roomId).emit(SOCKET_EVENT.USER.LEAVE, {
         userId: socket.userId,
       });

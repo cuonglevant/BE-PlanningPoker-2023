@@ -4,7 +4,7 @@ import {
   RoomStatuses,
   VotingSystems,
 } from '../../constants/db.constants';
-import votingSchema from './voting';
+import { votingSchema } from './voting';
 
 const { Schema } = mongoose;
 

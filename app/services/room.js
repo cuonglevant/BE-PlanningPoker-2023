@@ -1,7 +1,7 @@
 import { VotingSystems } from '../../constants/db.constants';
 import { RESPONSE_MESSAGE } from '../../constants/message';
 import { NotFoundException } from '../exceptions/NotFoundException';
-import { History, Room } from '../models/index';
+import { History, Room, Voting } from '../models/index';
 
 export const roomService = {
   async createRoom(roomName) {
@@ -14,14 +14,12 @@ export const roomService = {
     const room = await Room.findById(roomId);
     const { voting } = room;
     const userVotingIndex = voting.findIndex(
-      (_userVoting) => _userVoting.user === userId
+      (_userVoting) => _userVoting.userId === userId
     );
     // if userId not found, that mean that user hasn't joined room
     if (userVotingIndex === -1)
       throw new NotFoundException(RESPONSE_MESSAGE.USER_NOT_IN_ROOM);
-    const userVoting = {
-      user: userId,
-    };
+    const userVoting = { userId };
     // check if 'vote' is in 'VotingSystem'
     if (Object.values(VotingSystems.DEFAULT).includes(String(vote))) {
       // if true, we will set the value of 'vote' for this user
@@ -60,5 +58,47 @@ export const roomService = {
       voteOnTotal,
       playerResults,
     });
+  },
+
+  async addUserToRoom(userId, username, roomId) {
+    try {
+      const room = await Room.findById(roomId);
+      if (room) {
+        const userIndex = room.voting.findIndex(
+          (userVoting) => userVoting.userId === userId
+        );
+        if (userIndex === -1) {
+          const voting = new Voting({
+            userId,
+            username,
+            vote: '',
+            connected: true,
+          });
+          room.voting.push(voting);
+          await room.save();
+        }
+      }
+      return true;
+    } catch {
+      return false;
+    }
+  },
+
+  async removeUserFromRoom(userId, roomId) {
+    try {
+      const room = await Room.findById(roomId);
+      if (room) {
+        const userIndex = room.voting.findIndex(
+          (userVoting) => userVoting.userId === userId
+        );
+        if (userIndex !== -1) {
+          room.voting.splice(userIndex, 1);
+          await room.save();
+        }
+      }
+      return true;
+    } catch {
+      return false;
+    }
   },
 };

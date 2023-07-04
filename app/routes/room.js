@@ -76,7 +76,7 @@ router.get(ROUTES.ROOM.GET_ROOM, roomController.getRoomById);
  * @swagger
  * paths:
  *   '/room/nominate':
- *     post:
+ *     patch:
  *       summary: 'API for user when nominate for voting'
  *       tags: [room]
  *       requestBody:
@@ -86,10 +86,15 @@ router.get(ROUTES.ROOM.GET_ROOM, roomController.getRoomById);
  *             schema:
  *               type: object
  *               properties:
- *                 email:
+ *                 roomId:
  *                   type: string
- *                 password:
+ *                   example: 64a2435e4da414370b6bcc19
+ *                 user:
  *                   type: string
+ *                   example: 649d259bd32d0a9ce5acfc0d
+ *                 vote:
+ *                   type: string
+ *                   example: "coffee"
  *       responses:
  *         200:
  *           description: 'return message if the vote data is saved'

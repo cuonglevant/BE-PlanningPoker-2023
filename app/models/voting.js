@@ -9,10 +9,14 @@ const { Schema } = mongoose;
  *     Voting:
  *       type: object
  *       properties:
- *         user:
+ *         userId:
  *           type: string
  *           description: The id of user has this vote
  *           example: 6494131fe94cdbd901f3372b
+ *         username:
+ *           type: string
+ *           description: The name of user has this vote
+ *           example: name
  *         vote:
  *           type: string
  *           nullable: true
@@ -24,12 +28,13 @@ const { Schema } = mongoose;
  *           description: The staus that user is still in room or not
  *           example: true
  */
-const votingSchema = new Schema(
+export const votingSchema = new Schema(
   {
-    user: {
+    userId: {
       type: String,
       ref: 'User',
     },
+    username: String,
     vote: String,
     connected: {
       type: Boolean,
@@ -41,4 +46,4 @@ const votingSchema = new Schema(
   }
 );
 
-export default votingSchema;
+export default mongoose.model('Voting', votingSchema);
