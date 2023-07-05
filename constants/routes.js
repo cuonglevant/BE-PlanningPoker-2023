@@ -29,4 +29,9 @@ export const ROUTES = {
     NOMINATE: '/nominate',
     HISTORY: '/history',
   },
+  ISSUE: {
+    PATH: '/issue',
+    ROOT_PARAM_ID: '/:id',
+    ROOM_ISSUE: '/room/:id',
+  },
 };

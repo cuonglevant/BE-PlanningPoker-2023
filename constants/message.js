@@ -6,4 +6,8 @@ export const RESPONSE_MESSAGE = {
   USER_NOT_IN_ROOM: 'User is not in room',
   USER_NOT_FOUND: 'User not found',
   SAVE_HISTORY_SUCCESS: 'Save history successfully',
+
+  CREATED: 'created',
+  DELETED: 'deleted',
+  NOT_FOUND: '404 not found',
 };

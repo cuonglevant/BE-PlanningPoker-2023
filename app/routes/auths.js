@@ -4,7 +4,7 @@ import passport from 'passport';
 import { CLIENT_URL } from '../../config';
 import { ROUTES } from '../../constants/routes';
 import { authController } from '../controllers/auth';
-import '../services/passport';
+import '../services/3rd_party/passport';
 
 /**
  * @swagger

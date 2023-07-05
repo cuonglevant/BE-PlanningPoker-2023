@@ -13,7 +13,7 @@ const router = express.Router();
 /**
  * @swagger
  * paths:
- *   '/user':
+ *   '/user/:id':
  *     get:
  *       summary: 'Get user by id'
  *       tags: [user]

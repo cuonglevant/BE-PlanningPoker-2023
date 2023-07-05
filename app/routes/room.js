@@ -45,7 +45,7 @@ router.post(ROUTES.ROOT.PATH, roomController.createRoom);
 /**
  * @swagger
  * paths:
- *   '/room':
+ *   '/room/:id':
  *     get:
  *       summary: 'Get room by id'
  *       tags: [room]
