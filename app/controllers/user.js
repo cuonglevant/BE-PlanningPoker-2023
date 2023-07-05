@@ -27,4 +27,32 @@ export const userController = {
       });
     }
   },
+
+  updateProfile: async (req, res) => {
+    try {
+      const { userId, displayName, photoURL } = req.body;
+      const user = await UserService.updateProfile({
+        userId,
+        displayName,
+        photoURL,
+      });
+
+      if (user) {
+        return responseUtils.sendSuccess(res, {
+          status: HTTP_STATUS.OK,
+          data: user,
+        });
+      }
+
+      responseUtils.sendError(res, {
+        status: HTTP_STATUS.BAD_REQUEST,
+        message: RESPONSE_MESSAGE.USER_NOT_FOUND,
+      });
+    } catch {
+      responseUtils.sendError(res, {
+        status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        message: RESPONSE_MESSAGE.INTERNAL_SERVER_ERROR,
+      });
+    }
+  },
 };

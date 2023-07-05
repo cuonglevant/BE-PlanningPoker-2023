@@ -1,4 +1,4 @@
-const VotingSystems = {
+export const VotingSystems = {
   DEFAULT: [
     '0',
     '1',
@@ -15,16 +15,19 @@ const VotingSystems = {
     'coffee',
   ],
 };
-const UserTypes = {
+
+export const UserTypes = {
   GOOGLE: 'google',
   EMAIL: 'email',
   GUEST: 'guest',
 };
-const RoomStatuses = {
+
+export const RoomStatuses = {
   READY: 'ready',
   VOTING: 'voting',
   CONCLUDED: 'concluded',
 };
-const ROOM_NAME_DEFAULT = 'Planning poker game';
 
-export { ROOM_NAME_DEFAULT, RoomStatuses, UserTypes, VotingSystems };
+export const ROOM_NAME_DEFAULT = 'Planning poker game';
+
+export const DEFAULT_PHOTO_URL = '';

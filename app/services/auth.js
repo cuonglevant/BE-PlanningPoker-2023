@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { UserTypes } from '../../constants/db.constants';
+import { UserTypes, DEFAULT_PHOTO_URL } from '../../constants/db.constants';
 import { User } from '../models/index';
 
 const SALT_ROUNDS = 10;
@@ -17,6 +17,7 @@ export const authService = {
       password: passwordhash,
       name: username,
       type: UserTypes.EMAIL,
+      photoURL: DEFAULT_PHOTO_URL,
     });
     await user.save();
     const sendUser = await User.findById(user._id)

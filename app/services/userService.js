@@ -1,11 +1,12 @@
 import { User } from '../models/index';
-import { UserTypes } from '../../constants/db.constants';
+import { UserTypes, DEFAULT_PHOTO_URL } from '../../constants/db.constants';
 
 export const UserService = {
   createGuestUser: async (username) => {
     const user = new User({
       name: username,
       type: UserTypes.GUEST,
+      photoURL: DEFAULT_PHOTO_URL,
     });
     await user.save();
 
@@ -34,12 +35,18 @@ export const UserService = {
   },
 
   findUserById: async (id) => {
-    const user = await User.findOne({
-      _id: id,
-    })
-      .select({ password: 0 })
-      .lean();
-
+    const user = await User.findById(id).select({ password: 0 }).lean();
     return user;
+  },
+
+  updateProfile: async ({ userId, displayName, photoURL }) => {
+    const user = await User.findById(userId);
+    if (user) {
+      user.name = displayName;
+      user.photoURL = photoURL;
+      await user.save();
+      return user;
+    }
+    return null;
   },
 };
