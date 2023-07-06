@@ -184,4 +184,34 @@ router.get(ROUTES.ROOM.GET_ROOM, roomController.getRoomById);
  */
 router.patch(ROUTES.ROOM.NOMINATE, roomController.nominateVote);
 
+/**
+ * @swagger
+ * paths:
+ *   '/room/history/:id':
+ *     get:
+ *       summary: 'Get history by room id'
+ *       tags: [room]
+ *       parameters:
+ *         - in: path
+ *           name: id
+ *           required: true
+ *           description: 'room id attached in url when getting'
+ *           schema:
+ *             type: string
+ *       responses:
+ *         200:
+ *           description: 'return histories of room in data'
+ *           content:
+ *             'application/json':
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   success:
+ *                     type: boolean
+ *                     example: true
+ *                   data:
+ *                     $ref: '#/components/schemas/History'
+ */
+router.get(ROUTES.ROOM.HISTORY, roomController.getHistory);
+
 export default router;

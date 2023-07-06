@@ -1,7 +1,7 @@
-import { VotingSystems } from '../../constants/db.constants';
 import { RESPONSE_MESSAGE } from '../../constants/message';
 import { NotFoundException } from '../exceptions/NotFoundException';
 import { History, Room, Voting } from '../models/index';
+import { getVoteSummary } from '../utils/history';
 
 export const roomService = {
   async createRoom(roomName) {
@@ -12,25 +12,16 @@ export const roomService = {
 
   async nominateVote({ roomId, userId, vote }) {
     const room = await Room.findById(roomId);
-    const { voting } = room;
-    const userVotingIndex = voting.findIndex(
-      (_userVoting) => _userVoting.userId === userId
-    );
-    // if userId not found, that mean that user hasn't joined room
-    if (userVotingIndex === -1)
-      throw new NotFoundException(RESPONSE_MESSAGE.USER_NOT_IN_ROOM);
-    const userVoting = { userId };
-    // check if 'vote' is in 'VotingSystem'
-    if (Object.values(VotingSystems.DEFAULT).includes(String(vote))) {
-      // if true, we will set the value of 'vote' for this user
-      userVoting.vote = vote;
-    } else {
-      // if not, that mean user cancelled a vote
-      // we need to set 'vote' for this user is null
-      userVoting.vote = null;
+    if (room) {
+      const userIndex = room.voting.findIndex(
+        (userVoting) => userVoting.userId === userId
+      );
+      if (userIndex === -1) {
+        throw new NotFoundException(RESPONSE_MESSAGE.USER_NOT_IN_ROOM);
+      }
+      room.voting[userIndex].vote = vote;
+      await room.save();
     }
-    voting[userVotingIndex] = userVoting;
-    await room.save();
   },
 
   async getRoomById(roomId) {
@@ -38,26 +29,27 @@ export const roomService = {
     return room;
   },
 
-  async saveHistory({
-    issueName,
-    room,
-    results,
-    agreements,
-    durations,
-    date,
-    voteOnTotal,
-    playerResults,
-  }) {
-    await History.create({
-      issueName,
-      room,
+  async saveHistory(roomId) {
+    const room = await Room.findById(roomId);
+    if (!room) return null;
+    const { results, voteOnTotal, playerResults, coffeeTime } = getVoteSummary(
+      room.voting
+    );
+    const history = new History({
+      room: room._id,
+      issue: room.selectedIssue,
       results,
-      agreements,
-      durations,
-      date,
       voteOnTotal,
       playerResults,
+      coffeeTime,
     });
+    await history.save();
+    return history;
+  },
+
+  async findHistories(roomId) {
+    const histories = await History.find({ room: roomId });
+    return histories;
   },
 
   async addUserToRoom(userId, username, roomId) {
@@ -68,19 +60,18 @@ export const roomService = {
           (userVoting) => userVoting.userId === userId
         );
         if (userIndex === -1) {
-          const voting = new Voting({
+          const userVoting = new Voting({
             userId,
             username,
             vote: '',
             connected: true,
           });
-          room.voting.push(voting);
+          room.voting.push(userVoting);
           await room.save();
         }
       }
-      return true;
     } catch {
-      return false;
+      return null;
     }
   },
 
@@ -96,9 +87,23 @@ export const roomService = {
           await room.save();
         }
       }
-      return true;
     } catch {
-      return false;
+      return null;
+    }
+  },
+
+  async clearRoomVoting(roomId) {
+    try {
+      const room = await Room.findById(roomId);
+      if (room) {
+        const votes = room.voting;
+        votes.forEach((userVoting) => {
+          userVoting.vote = null;
+        });
+        await room.save();
+      }
+    } catch {
+      return null;
     }
   },
 };

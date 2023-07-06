@@ -96,4 +96,20 @@ export const roomController = {
       });
     }
   },
+
+  async getHistory(req, res) {
+    try {
+      const { id } = req.params;
+      const histories = await roomService.findHistories(id);
+      responseUtils.sendSuccess(res, {
+        status: HTTP_STATUS.OK,
+        data: histories,
+      });
+    } catch {
+      responseUtils.sendError(res, {
+        status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        message: RESPONSE_MESSAGE.INTERNAL_SERVER_ERROR,
+      });
+    }
+  },
 };

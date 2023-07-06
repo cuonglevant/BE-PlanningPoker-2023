@@ -31,3 +31,8 @@ export const RoomStatuses = {
 export const ROOM_NAME_DEFAULT = 'Planning poker game';
 
 export const DEFAULT_PHOTO_URL = '';
+
+export const EXTRA_VOTE = {
+  COFFEE: 'coffee',
+  QUESTION_MARK: '?',
+};

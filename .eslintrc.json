@@ -28,7 +28,7 @@
     "prettier/prettier": "error",
     "import/prefer-default-export": "off",
     "no-underscore-dangle": "off",
-    "consistent-return": "off"
-    
+    "consistent-return": "off",
+    "radix": "off"
   }
 }

@@ -15,10 +15,10 @@ const { Schema } = mongoose;
  *           type: string
  *           description: The auto-generated id of history
  *           example: 34942793fbfa23d4157c250d
- *         issueName:
+ *         issue:
  *           type: string
- *           description: The name of issue
- *           example: write api-docs
+ *           description: The id of issue
+ *           example: 64a4f22f4525021dea2affc5
  *         room:
  *           type: string
  *           description: The id of room
@@ -27,14 +27,6 @@ const { Schema } = mongoose;
  *           type: number
  *           description: The result of vote for the issue
  *           example: 0.8
- *         agreements:
- *           type: number
- *           description: The result of vote for the issue
- *           example: 3
- *         durations:
- *           type: number
- *           description: Duration of vote in seconds
- *           example: 66
  *         date:
  *           type: date
  *           description: 2023-06-26T07:56:13.359Z
@@ -46,16 +38,25 @@ const { Schema } = mongoose;
  *           type: string
  *           description: Detailed result of vote
  *           example: codeholic(5), playboy(1)
+ *         coffeeTime:
+ *           type: boolean
+ *           description: True if someone wanna break
+ *           example: false
  */
 const historySchema = new Schema({
-  issueName: String,
+  issue: Schema.Types.ObjectId,
   room: { type: Schema.Types.ObjectId, required: true },
-  results: Number,
-  agreements: Number,
-  durations: Number,
-  date: Date,
+  results: String,
+  date: {
+    type: Date,
+    default: Date.now,
+  },
   voteOnTotal: String,
   playerResults: String,
+  coffeeTime: {
+    type: Schema.Types.Boolean,
+    default: false,
+  },
 });
 
 export default mongoose.model('VotingHistory', historySchema);
