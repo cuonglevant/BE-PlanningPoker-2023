@@ -2,6 +2,7 @@ import { Server } from 'socket.io';
 import { CLIENT_URL, HOSTED_CLIENT_URL } from '../../config';
 import { SOCKET_EVENT } from '../../constants/socket_event';
 import { roomService } from '../services/room';
+import { issueService } from '../services/issue';
 
 export const attachIO = (server) => {
   const io = new Server(server, {
@@ -18,7 +19,7 @@ export const attachIO = (server) => {
       socket.userId = userId;
       socket.roomId = roomId;
       socket.join(roomId);
-      socket.to(roomId).emit(SOCKET_EVENT.USER.JOIN, { userId, username });
+      io.to(roomId).emit(SOCKET_EVENT.USER.JOIN, { userId, username });
     });
 
     socket.on(SOCKET_EVENT.USER.VOTE, (data) => {
@@ -44,6 +45,7 @@ export const attachIO = (server) => {
     });
 
     socket.on(SOCKET_EVENT.ROOM.NAME_CHANGE, (data) => {
+      roomService.changeRoomName(socket.roomId, data.name);
       io.to(socket.roomId).emit(SOCKET_EVENT.ROOM.NAME_CHANGE, data);
     });
 
@@ -56,15 +58,21 @@ export const attachIO = (server) => {
     });
 
     socket.on(SOCKET_EVENT.ISSUE.NAME_CHANGE, (data) => {
+      issueService.changeIssueName(data.id, data.name);
       socket.to(socket.roomId).emit(SOCKET_EVENT.ISSUE.NAME_CHANGE, data);
     });
 
     socket.on(SOCKET_EVENT.ISSUE.SELECT, (data) => {
+      roomService.setSelectedIssue(socket.roomId, data ? data._id : null);
       socket.to(socket.roomId).emit(SOCKET_EVENT.ISSUE.SELECT, data);
     });
 
-    socket.on(SOCKET_EVENT.ISSUE.DESELECT, (data) => {
-      socket.to(socket.roomId).emit(SOCKET_EVENT.ISSUE.DESELECT, data);
+    socket.on(SOCKET_EVENT.USER.LEAVE, () => {
+      roomService.removeUserFromRoom(socket.userId, socket.roomId);
+      socket.to(socket.roomId).emit(SOCKET_EVENT.USER.LEAVE, {
+        userId: socket.userId,
+      });
+      [socket.userId, socket.roomId] = [null, null];
     });
 
     socket.on(SOCKET_EVENT.DISCONNECTION, () => {

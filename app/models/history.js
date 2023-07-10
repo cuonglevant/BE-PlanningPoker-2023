@@ -42,9 +42,13 @@ const { Schema } = mongoose;
  *           type: boolean
  *           description: True if someone wanna break
  *           example: false
+ *         fullConsensus:
+ *           type: boolean
+ *           description: True if every one is agree with the same vote value
+ *           example: true
  */
 const historySchema = new Schema({
-  issue: Schema.Types.ObjectId,
+  issueName: String,
   room: { type: Schema.Types.ObjectId, required: true },
   results: String,
   date: {
@@ -54,6 +58,10 @@ const historySchema = new Schema({
   voteOnTotal: String,
   playerResults: String,
   coffeeTime: {
+    type: Schema.Types.Boolean,
+    default: false,
+  },
+  fullConsensus: {
     type: Schema.Types.Boolean,
     default: false,
   },

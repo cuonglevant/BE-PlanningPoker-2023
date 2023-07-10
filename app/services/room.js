@@ -1,6 +1,6 @@
 import { RESPONSE_MESSAGE } from '../../constants/message';
 import { NotFoundException } from '../exceptions/NotFoundException';
-import { History, Room, Voting } from '../models/index';
+import { History, Issue, Room, Voting } from '../models/index';
 import { getVoteSummary } from '../utils/history';
 
 export const roomService = {
@@ -32,16 +32,25 @@ export const roomService = {
   async saveHistory(roomId) {
     const room = await Room.findById(roomId);
     if (!room) return null;
-    const { results, voteOnTotal, playerResults, coffeeTime } = getVoteSummary(
-      room.voting
-    );
+    const { results, voteOnTotal, playerResults, coffeeTime, fullConsensus } =
+      getVoteSummary(room.voting);
+    if (fullConsensus) room.fullConsensus += 1;
+    room.save();
+
+    let issueName = '';
+    if (room.selectedIssue) {
+      const issue = await Issue.findById(room.selectedIssue);
+      issueName = issue.name;
+    }
+
     const history = new History({
       room: room._id,
-      issue: room.selectedIssue,
+      issueName,
       results,
       voteOnTotal,
       playerResults,
       coffeeTime,
+      fullConsensus,
     });
     await history.save();
     return history;
@@ -50,6 +59,20 @@ export const roomService = {
   async findHistories(roomId) {
     const histories = await History.find({ room: roomId });
     return histories;
+  },
+
+  async changeRoomName(roomId, roomName) {
+    const room = await Room.findById(roomId);
+    if (!room) return null;
+    room.name = roomName;
+    await room.save();
+  },
+
+  async setSelectedIssue(roomId, issueId) {
+    const room = await Room.findById(roomId);
+    if (!room) return null;
+    room.selectedIssue = issueId;
+    await room.save();
   },
 
   async addUserToRoom(userId, username, roomId) {

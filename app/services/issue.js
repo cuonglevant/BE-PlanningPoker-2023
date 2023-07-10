@@ -17,6 +17,12 @@ export const issueService = {
     return issueList;
   },
 
+  async changeIssueName(issueId, issueName) {
+    const issue = await Issue.findById(issueId);
+    issue.name = issueName;
+    await issue.save();
+  },
+
   async deleteIssue(id) {
     await Issue.deleteOne({
       _id: id,
