@@ -135,4 +135,21 @@ export const roomService = {
       return null;
     }
   },
+
+  async setSpecMode(roomId, userId, mode) {
+    try {
+      const room = await Room.findById(roomId);
+      if (room) {
+        const votes = room.voting;
+        votes.forEach((userVoting) => {
+          if (userVoting.userId === userId) userVoting.specMode = mode;
+        });
+        room.status = RoomStatuses.VOTING;
+        room.currentResults = null;
+        await room.save();
+      }
+    } catch {
+      return null;
+    }
+  },
 };

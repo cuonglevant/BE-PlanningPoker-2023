@@ -27,6 +27,11 @@ const { Schema } = mongoose;
  *           default: true
  *           description: The staus that user is still in room or not
  *           example: true
+ *         specMode:
+ *           type: boolean
+ *           default: false
+ *           description: The staus that user is on spectator mode
+ *           example: false
  */
 export const votingSchema = new Schema(
   {
@@ -39,6 +44,10 @@ export const votingSchema = new Schema(
     connected: {
       type: Boolean,
       default: true,
+    },
+    specMode: {
+      type: Boolean,
+      default: false,
     },
   },
   {

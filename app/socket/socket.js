@@ -42,6 +42,14 @@ export const attachIO = (server) => {
       });
     });
 
+    socket.on(SOCKET_EVENT.USER.SPECTATOR_MODE, (data) => {
+      roomService.setSpecMode(socket.roomId, socket.userId, data.specMode);
+      io.to(socket.roomId).emit(SOCKET_EVENT.USER.SPECTATOR_MODE, {
+        userId: socket.userId,
+        specMode: data.specMode,
+      });
+    });
+
     socket.on(SOCKET_EVENT.ROOM.START, () => {
       roomService.clearRoomVoting(socket.roomId);
       io.to(socket.roomId).emit(SOCKET_EVENT.ROOM.START);
