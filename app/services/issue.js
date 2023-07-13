@@ -19,6 +19,7 @@ export const issueService = {
 
   async changeIssueName(issueId, issueName) {
     const issue = await Issue.findById(issueId);
+    if (!issue) return;
     issue.name = issueName;
     await issue.save();
   },

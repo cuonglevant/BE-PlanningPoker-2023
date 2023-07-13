@@ -5,6 +5,7 @@ import {
   VotingSystems,
 } from '../../constants/db.constants';
 import { votingSchema } from './voting';
+import { historySchema } from './history';
 
 const { Schema } = mongoose;
 
@@ -45,6 +46,10 @@ const { Schema } = mongoose;
  *           items:
  *             $ref: '#/components/schemas/Voting'
  *           description: The current result of user voting in room
+ *         currentResult:
+ *           type: object
+ *           $ref: '#/components/schemas/History'
+ *
  */
 const roomSchema = new Schema({
   name: {
@@ -62,10 +67,11 @@ const roomSchema = new Schema({
   status: {
     type: String,
     enum: Object.values(RoomStatuses),
-    default: RoomStatuses.READY,
+    default: RoomStatuses.VOTING,
   },
   voting: [votingSchema],
   selectedIssue: Schema.Types.ObjectId,
+  currentResults: historySchema,
 });
 
 export default mongoose.model('Room', roomSchema);

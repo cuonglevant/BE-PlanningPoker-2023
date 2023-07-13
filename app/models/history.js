@@ -47,7 +47,7 @@ const { Schema } = mongoose;
  *           description: True if every one is agree with the same vote value
  *           example: true
  */
-const historySchema = new Schema({
+export const historySchema = new Schema({
   issueName: String,
   room: { type: Schema.Types.ObjectId, required: true },
   results: String,

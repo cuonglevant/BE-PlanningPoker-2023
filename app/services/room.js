@@ -2,6 +2,7 @@ import { RESPONSE_MESSAGE } from '../../constants/message';
 import { NotFoundException } from '../exceptions/NotFoundException';
 import { History, Issue, Room, Voting } from '../models/index';
 import { getVoteSummary } from '../utils/history';
+import { RoomStatuses } from '../../constants/db.constants';
 
 export const roomService = {
   async createRoom(roomName) {
@@ -35,7 +36,7 @@ export const roomService = {
     const { results, voteOnTotal, playerResults, coffeeTime, fullConsensus } =
       getVoteSummary(room.voting);
     if (fullConsensus) room.fullConsensus += 1;
-    room.save();
+    room.status = RoomStatuses.CONCLUDED;
 
     let issueName = '';
     if (room.selectedIssue) {
@@ -52,6 +53,9 @@ export const roomService = {
       coffeeTime,
       fullConsensus,
     });
+    room.currentResults = history;
+    room.save();
+
     await history.save();
     return history;
   },
@@ -123,6 +127,8 @@ export const roomService = {
         votes.forEach((userVoting) => {
           userVoting.vote = null;
         });
+        room.status = RoomStatuses.VOTING;
+        room.currentResults = null;
         await room.save();
       }
     } catch {

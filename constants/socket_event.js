@@ -7,6 +7,7 @@ export const SOCKET_EVENT = {
     LEAVE: 'user:leave',
     VOTE: 'user:vote',
     UNVOTE: 'user:unvote',
+    NAME_CHANGE: 'user:name-change',
     SPECTATOR_MODE: 'user:spec-mode',
   },
 

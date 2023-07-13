@@ -35,7 +35,15 @@ export const attachIO = (server) => {
       });
     });
 
+    socket.on(SOCKET_EVENT.USER.NAME_CHANGE, (data) => {
+      io.to(socket.roomId).emit(SOCKET_EVENT.USER.NAME_CHANGE, {
+        userId: socket.userId,
+        name: data.name,
+      });
+    });
+
     socket.on(SOCKET_EVENT.ROOM.START, () => {
+      roomService.clearRoomVoting(socket.roomId);
       io.to(socket.roomId).emit(SOCKET_EVENT.ROOM.START);
     });
 
@@ -50,6 +58,7 @@ export const attachIO = (server) => {
     });
 
     socket.on(SOCKET_EVENT.ISSUE.NEW, (data) => {
+      roomService.setSelectedIssue(socket.roomId, data._id);
       socket.to(socket.roomId).emit(SOCKET_EVENT.ISSUE.NEW, data);
     });
 
@@ -58,7 +67,7 @@ export const attachIO = (server) => {
     });
 
     socket.on(SOCKET_EVENT.ISSUE.NAME_CHANGE, (data) => {
-      issueService.changeIssueName(data.id, data.name);
+      issueService.changeIssueName(data._id, data.name);
       socket.to(socket.roomId).emit(SOCKET_EVENT.ISSUE.NAME_CHANGE, data);
     });
 
