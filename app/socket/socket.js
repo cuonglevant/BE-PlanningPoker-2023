@@ -13,13 +13,13 @@ export const attachIO = (server) => {
   });
 
   io.on(SOCKET_EVENT.CONNECTION, (socket) => {
-    socket.on(SOCKET_EVENT.USER.JOIN, (data) => {
+    socket.on(SOCKET_EVENT.USER.JOIN, async (data) => {
       const { userId, username, roomId } = data;
-      roomService.addUserToRoom(userId, username, roomId);
+      const users = await roomService.addUserToRoom(userId, username, roomId);
       socket.userId = userId;
       socket.roomId = roomId;
       socket.join(roomId);
-      io.to(roomId).emit(SOCKET_EVENT.USER.JOIN, { userId, username });
+      io.to(roomId).emit(SOCKET_EVENT.USER.JOIN, users);
     });
 
     socket.on(SOCKET_EVENT.USER.VOTE, (data) => {
@@ -65,6 +65,10 @@ export const attachIO = (server) => {
       io.to(socket.roomId).emit(SOCKET_EVENT.ROOM.NAME_CHANGE, data);
     });
 
+    socket.on(SOCKET_EVENT.ROOM.SET_TIMER, (data) => {
+      io.to(socket.roomId).emit(SOCKET_EVENT.ROOM.SET_TIMER, data);
+    });
+
     socket.on(SOCKET_EVENT.ISSUE.NEW, (data) => {
       roomService.setSelectedIssue(socket.roomId, data._id);
       socket.to(socket.roomId).emit(SOCKET_EVENT.ISSUE.NEW, data);
@@ -84,21 +88,21 @@ export const attachIO = (server) => {
       socket.to(socket.roomId).emit(SOCKET_EVENT.ISSUE.SELECT, data);
     });
 
-    socket.on(SOCKET_EVENT.USER.LEAVE, () => {
-      roomService.removeUserFromRoom(socket.userId, socket.roomId);
+    socket.on(SOCKET_EVENT.USER.LEAVE, async () => {
+      await roomService.removeUserFromRoom(socket.userId, socket.roomId);
       socket.to(socket.roomId).emit(SOCKET_EVENT.USER.LEAVE, {
         userId: socket.userId,
       });
       [socket.userId, socket.roomId] = [null, null];
     });
 
-    socket.on(SOCKET_EVENT.DISCONNECTION, () => {
+    socket.on(SOCKET_EVENT.DISCONNECTION, async () => {
       if (socket.roomId && socket.userId) {
         roomService.removeUserFromRoom(socket.userId, socket.roomId);
+        io.to(socket.roomId).emit(SOCKET_EVENT.USER.LEAVE, {
+          userId: socket.userId,
+        });
       }
-      socket.to(socket.roomId).emit(SOCKET_EVENT.USER.LEAVE, {
-        userId: socket.userId,
-      });
     });
   });
 };

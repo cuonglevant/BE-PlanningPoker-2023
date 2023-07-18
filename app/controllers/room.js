@@ -1,6 +1,5 @@
 import { HTTP_STATUS } from '../../constants/HTTPStatusCode';
 import { RESPONSE_MESSAGE } from '../../constants/message';
-import { NotFoundException } from '../exceptions/NotFoundException';
 import { roomService } from '../services/room';
 import { responseUtils } from '../utils/response';
 
@@ -34,12 +33,6 @@ export const roomController = {
         data: RESPONSE_MESSAGE.SAVE_USERVOTING_SUCCESS,
       });
     } catch (err) {
-      if (err instanceof NotFoundException) {
-        return responseUtils.sendError(res, {
-          status: HTTP_STATUS.NOT_FOUND,
-          message: err.message,
-        });
-      }
       responseUtils.sendError(res, {
         status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
         message: RESPONSE_MESSAGE.INTERNAL_SERVER_ERROR,

@@ -1,8 +1,7 @@
-import { RESPONSE_MESSAGE } from '../../constants/message';
-import { NotFoundException } from '../exceptions/NotFoundException';
 import { History, Issue, Room, Voting } from '../models/index';
 import { getVoteSummary } from '../utils/history';
 import { RoomStatuses } from '../../constants/db.constants';
+import { MutexManager } from '../utils/MutexManager';
 
 export const roomService = {
   async createRoom(roomName) {
@@ -12,16 +11,18 @@ export const roomService = {
   },
 
   async nominateVote({ roomId, userId, vote }) {
+    const release = await MutexManager.acquire(roomId);
     const room = await Room.findById(roomId);
-    if (room) {
+    if (!room) return null;
+    try {
       const userIndex = room.voting.findIndex(
         (userVoting) => userVoting.userId === userId
       );
-      if (userIndex === -1) {
-        throw new NotFoundException(RESPONSE_MESSAGE.USER_NOT_IN_ROOM);
-      }
+      if (userIndex === -1) return release();
       room.voting[userIndex].vote = vote;
       await room.save();
+    } finally {
+      release();
     }
   },
 
@@ -66,60 +67,73 @@ export const roomService = {
   },
 
   async changeRoomName(roomId, roomName) {
-    const room = await Room.findById(roomId);
-    if (!room) return null;
-    room.name = roomName;
-    await room.save();
+    const release = await MutexManager.acquire(roomId);
+    try {
+      const room = await Room.findById(roomId);
+      if (!room) return null;
+      room.name = roomName;
+      await room.save();
+    } finally {
+      release();
+    }
   },
 
   async setSelectedIssue(roomId, issueId) {
-    const room = await Room.findById(roomId);
-    if (!room) return null;
-    room.selectedIssue = issueId;
-    await room.save();
+    const release = await MutexManager.acquire(roomId);
+    try {
+      const room = await Room.findById(roomId);
+      if (!room) return null;
+      room.selectedIssue = issueId;
+      await room.save();
+    } finally {
+      release();
+    }
   },
 
   async addUserToRoom(userId, username, roomId) {
+    const release = await MutexManager.acquire(roomId);
     try {
       const room = await Room.findById(roomId);
-      if (room) {
-        const userIndex = room.voting.findIndex(
-          (userVoting) => userVoting.userId === userId
-        );
-        if (userIndex === -1) {
-          const userVoting = new Voting({
-            userId,
-            username,
-            vote: '',
-            connected: true,
-          });
-          room.voting.push(userVoting);
-          await room.save();
-        }
+      if (!room) return release();
+      const userIndex = room.voting.findIndex(
+        (userVoting) => userVoting.userId === userId
+      );
+      if (userIndex === -1) {
+        const userVoting = new Voting({
+          userId,
+          username,
+          vote: '',
+          connected: true,
+        });
+        room.voting.push(userVoting);
+        await room.save();
       }
-    } catch {
-      return null;
+      return room.voting;
+    } finally {
+      release();
     }
   },
 
   async removeUserFromRoom(userId, roomId) {
+    const release = await MutexManager.acquire(roomId);
     try {
       const room = await Room.findById(roomId);
-      if (room) {
-        const userIndex = room.voting.findIndex(
-          (userVoting) => userVoting.userId === userId
-        );
-        if (userIndex !== -1) {
-          room.voting.splice(userIndex, 1);
-          await room.save();
-        }
+      if (!room) return null;
+      const userIndex = room.voting.findIndex(
+        (userVoting) => userVoting.userId === userId
+      );
+      if (userIndex !== -1) {
+        room.voting.splice(userIndex, 1);
+        await room.save();
       }
-    } catch {
-      return null;
+      return room.voting;
+    } finally {
+      release();
     }
   },
 
   async clearRoomVoting(roomId) {
+    const release = await MutexManager.acquire(roomId);
     try {
       const room = await Room.findById(roomId);
       if (room) {
@@ -131,12 +145,13 @@ export const roomService = {
         room.currentResults = null;
         await room.save();
       }
-    } catch {
-      return null;
+    } finally {
+      release();
     }
   },
 
   async setSpecMode(roomId, userId, mode) {
+    const release = await MutexManager.acquire(roomId);
     try {
       const room = await Room.findById(roomId);
       if (room) {
@@ -144,12 +159,10 @@ export const roomService = {
         votes.forEach((userVoting) => {
           if (userVoting.userId === userId) userVoting.specMode = mode;
         });
-        room.status = RoomStatuses.VOTING;
-        room.currentResults = null;
         await room.save();
       }
-    } catch {
-      return null;
+    } finally {
+      release();
     }
   },
 };
