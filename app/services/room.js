@@ -159,7 +159,7 @@ export const roomService = {
     }
   },
 
-  async clearRoomVoting(roomId) {
+  async clearRoomVoting(roomId, resetIssue) {
     const release = await MutexManager.acquire(roomId);
     try {
       const room = await Room.findById(roomId);
@@ -170,7 +170,7 @@ export const roomService = {
         });
         room.status = RoomStatuses.VOTING;
         room.currentResults = null;
-        room.selectedIssue = null;
+        if (resetIssue) room.selectedIssue = null;
         await room.save();
       }
     } finally {

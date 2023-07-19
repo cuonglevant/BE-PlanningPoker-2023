@@ -51,9 +51,9 @@ export const attachIO = (server) => {
       });
     });
 
-    socket.on(SOCKET_EVENT.ROOM.START, () => {
-      roomService.clearRoomVoting(socket.roomId);
-      io.to(socket.roomId).emit(SOCKET_EVENT.ROOM.START);
+    socket.on(SOCKET_EVENT.ROOM.START, (resetIssue) => {
+      roomService.clearRoomVoting(socket.roomId, resetIssue);
+      io.to(socket.roomId).emit(SOCKET_EVENT.ROOM.START, resetIssue);
     });
 
     socket.on(SOCKET_EVENT.ROOM.REVEAL, async () => {

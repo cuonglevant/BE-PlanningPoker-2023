@@ -1,7 +1,7 @@
 import express from 'express';
 import { body } from 'express-validator';
 import passport from 'passport';
-import { CLIENT_URL } from '../../config';
+import PopupTools from 'popup-tools';
 import { ROUTES } from '../../constants/routes';
 import { authController } from '../controllers/auth';
 import '../services/3rd_party/passport';
@@ -29,6 +29,7 @@ router.get(
   ROUTES.AUTH.GOOGLE_OAUTH,
   passport.authenticate('google', {
     scope: ['email', 'profile'],
+    prompt: 'select_account',
   })
 );
 
@@ -38,7 +39,7 @@ router.get(
     session: false,
   }),
   (req, res) => {
-    res.redirect(`${CLIENT_URL}/user/${req.user}`);
+    res.end(PopupTools.popupResponse(req.user));
   }
 );
 
