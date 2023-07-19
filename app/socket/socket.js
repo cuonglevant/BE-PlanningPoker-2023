@@ -71,7 +71,6 @@ export const attachIO = (server) => {
     });
 
     socket.on(SOCKET_EVENT.ISSUE.NEW, (data) => {
-      roomService.setSelectedIssue(socket.roomId, data._id);
       socket.to(socket.roomId).emit(SOCKET_EVENT.ISSUE.NEW, data);
     });
 

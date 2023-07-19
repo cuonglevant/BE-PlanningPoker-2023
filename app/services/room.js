@@ -43,21 +43,30 @@ export const roomService = {
     if (room.selectedIssue) {
       const issue = await Issue.findById(room.selectedIssue);
       issueName = issue.name;
+      if (!isNaN(results)) {
+        issue.storyPoints = Math.round(results);
+        issue.save();
+      }
     }
 
-    const history = new History({
+    const history = {
       room: room._id,
       issueName,
-      results,
+      results: isNaN(results) ? results : Math.round(results * 10) / 10,
       voteOnTotal,
       playerResults,
       coffeeTime,
       fullConsensus,
-    });
+    };
+
     room.currentResults = history;
     room.save();
 
-    await history.save();
+    new History({
+      ...history,
+      results: isNaN(results) ? results : Math.round(results),
+    }).save();
+
     return history;
   },
 
@@ -161,6 +170,7 @@ export const roomService = {
         });
         room.status = RoomStatuses.VOTING;
         room.currentResults = null;
+        room.selectedIssue = null;
         await room.save();
       }
     } finally {

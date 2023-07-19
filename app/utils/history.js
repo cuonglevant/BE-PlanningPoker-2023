@@ -1,5 +1,7 @@
 import { EXTRA_VOTE } from '../../constants/db.constants';
 
+const REDUNDANT_CHAR_LENGTH = 2;
+
 const getFullConsensus = (votes, results) => {
   for (let i = 0; i < votes.length; i += 1) {
     if (
@@ -37,6 +39,11 @@ export const getVoteSummary = (votes) => {
     results = `${voteSum / numbericVoteCount}`;
     fullConsensus = getFullConsensus(votes, results);
   }
+
+  playerResults = playerResults.substring(
+    0,
+    playerResults.length - REDUNDANT_CHAR_LENGTH
+  );
 
   return { results, voteOnTotal, playerResults, coffeeTime, fullConsensus };
 };
