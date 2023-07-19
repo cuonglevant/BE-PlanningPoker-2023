@@ -94,7 +94,7 @@ export const roomService = {
     const release = await MutexManager.acquire(roomId);
     try {
       const room = await Room.findById(roomId);
-      if (!room) return release();
+      if (!room) return null;
       const userIndex = room.voting.findIndex(
         (userVoting) => userVoting.userId === userId
       );
@@ -124,6 +124,24 @@ export const roomService = {
       );
       if (userIndex !== -1) {
         room.voting.splice(userIndex, 1);
+        await room.save();
+      }
+      return room.voting;
+    } finally {
+      release();
+    }
+  },
+
+  async handleUserUpdate(userId, username, roomId) {
+    const release = await MutexManager.acquire(roomId);
+    try {
+      const room = await Room.findById(roomId);
+      if (!room) return null;
+      const userIndex = room.voting.findIndex(
+        (userVoting) => userVoting.userId === userId
+      );
+      if (userIndex !== -1) {
+        room.voting[userIndex].username = username;
         await room.save();
       }
       return room.voting;

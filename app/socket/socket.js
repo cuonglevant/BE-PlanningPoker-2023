@@ -36,6 +36,7 @@ export const attachIO = (server) => {
     });
 
     socket.on(SOCKET_EVENT.USER.NAME_CHANGE, (data) => {
+      roomService.handleUserUpdate(socket.userId, data.name, socket.roomId);
       io.to(socket.roomId).emit(SOCKET_EVENT.USER.NAME_CHANGE, {
         userId: socket.userId,
         name: data.name,
@@ -66,7 +67,7 @@ export const attachIO = (server) => {
     });
 
     socket.on(SOCKET_EVENT.ROOM.SET_TIMER, (data) => {
-      io.to(socket.roomId).emit(SOCKET_EVENT.ROOM.SET_TIMER, data);
+      socket.to(socket.roomId).emit(SOCKET_EVENT.ROOM.SET_TIMER, data);
     });
 
     socket.on(SOCKET_EVENT.ISSUE.NEW, (data) => {
