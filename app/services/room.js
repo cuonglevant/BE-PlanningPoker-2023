@@ -99,6 +99,20 @@ export const roomService = {
     }
   },
 
+  async handleRemoveIssue(roomId, issueId) {
+    const release = await MutexManager.acquire(roomId);
+    try {
+      const room = await Room.findById(roomId);
+      if (!room) return null;
+      if (room.selectedIssue.toString() === issueId) {
+        room.selectedIssue = null;
+        await room.save();
+      }
+    } finally {
+      release();
+    }
+  },
+
   async addUserToRoom(userId, username, roomId) {
     const release = await MutexManager.acquire(roomId);
     try {
