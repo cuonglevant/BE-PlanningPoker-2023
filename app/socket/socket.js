@@ -75,6 +75,7 @@ export const attachIO = (server) => {
     });
 
     socket.on(SOCKET_EVENT.ISSUE.REMOVE, (data) => {
+      roomService.handleRemoveIssue(data.room, data._id);
       socket.to(socket.roomId).emit(SOCKET_EVENT.ISSUE.REMOVE, data);
     });
 
