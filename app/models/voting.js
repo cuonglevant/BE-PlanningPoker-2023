@@ -52,6 +52,8 @@ export const votingSchema = new Schema(
   },
   {
     _id: false,
+    autoCreate: false,
+    autoIndex: false,
   }
 );
 
