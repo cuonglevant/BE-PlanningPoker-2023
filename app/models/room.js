@@ -45,7 +45,7 @@ const { Schema } = mongoose;
  *           type: array
  *           items:
  *             $ref: '#/components/schemas/Voting'
- *           description: The current result of user voting in room
+ *           description: The current result of user voting in rooAm
  *         currentResult:
  *           type: object
  *           $ref: '#/components/schemas/History'
